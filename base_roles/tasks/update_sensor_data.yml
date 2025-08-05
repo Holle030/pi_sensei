@@ -1,0 +1,30 @@
+- name: Copy kombiniertes Shell-Skript zur Sensor-Ausgabe
+  copy:
+    dest: /home/hollepi/update_sensor_web.sh
+    content: |
+      #!/bin/bash
+      ENV="{{ bme_python_env }}"
+      SCRIPT="{{ sensor_script }}"
+      OUTPUT="{{ html_output }}"
+
+      DATA=$($ENV/bin/python $SCRIPT)
+      IFS='|' read -r TIME TEMP HUMI PRESS <<< "$DATA"
+
+      cat <<HTML > "$OUTPUT"
+      <!DOCTYPE html>
+      <html>
+      <head><meta charset="UTF-8"><title>Sensor</title><meta http-equiv="refresh" content="300"></head>
+      <body style="background:black;color:lime;font-family:monospace">
+        <h2>🌡️ Sensor-Daten</h2>
+        <p><b>Zeit:</b> $TIME</p>
+        <p><b>Temperatur:</b> $TEMP °C</p>
+        <p><b>Luftfeuchte:</b> $HUMI %</p>
+        <p><b>Druck:</b> $PRESS hPa</p>
+      </body>
+      </html>
+      HTML
+    mode: '0755'
+
+- name: Sensor-Webupdate ausführen
+  command: /home/hollepi/update_sensor_web.sh
+

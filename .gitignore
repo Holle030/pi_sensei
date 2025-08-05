@@ -1,0 +1,57 @@
+# Ignoriere den secrets Ordner
+secrets/
+
+# Ignoriere alle SSH-Schlüssel
+*.key
+*.pub
+
+# Ignoriere alle Konfigurationsdateien und Verzeichnisse, die benutzerspezifisch sind
+.bash_history
+.bash_logout
+.bashrc
+.profile
+.vscode/
+.ssh/
+.gitconfig
+
+# Ignoriere Cache-Dateien und temporäre Dateien
+.cache/
+.config/
+.idea/
+
+# Ignoriere Log-Dateien und Backup-Dateien
+*.log
+*.bak
+*.swp
+*.swo
+
+# Ignoriere Python-Datenbanken und Cache-Dateien
+__pycache__/
+*.pyc
+
+# Ignoriere Virtualenv-Ordner
+.venv/
+env/
+venv/
+
+# Ignoriere Systemumgebungsdateien
+.pki/
+.pam_environment
+.idlerc/
+.python_history
+
+# Ignoriere alle Windows-spezifischen Systemdateien
+Thumbs.db
+Desktop.ini
+
+# Ignoriere Mac-spezifische Dateien
+.DS_Store
+
+# Ignoriere Node.js und npm-spezifische Dateien
+node_modules/
+npm-debug.log
+
+# Ignoriere temporäre Dateien von IDEs
+*.sublime-project
+*.sublime-workspace
+*.iml

@@ -1,0 +1,12 @@
+# WireGuard Configuration
+wireguard_private_key: "{{ lookup('file', '/home/holle/server_private_key') }}"
+peer_public_key: "{{ lookup('file', '/home/holle/client_public.key') }}"
+peer_endpoint: "192.168.178.69:51820"  # Erstmal mit lokaler IP testen
+wireguard_port: 51820
+wireguard_server_ip: "10.0.0.1/24"
+wireguard_client_ip: "10.0.0.2/32"
+
+# Sensor-Konfiguration
+bme_python_env: /home/holle/bme280-venv
+sensor_script: /home/holle/bme280-readout/sensor.py
+html_output: /var/www/html/index.html

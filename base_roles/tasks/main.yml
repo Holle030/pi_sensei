@@ -1,0 +1,23 @@
+- name: SSH-Key für Benutzer setzen
+  include_tasks: ssh.yml
+
+- name: Python3 und virtualenv installieren
+  include_tasks: python.yml
+
+- name: Systemtools installieren (htop, git, etc.)
+  include_tasks: systemtools.yml
+
+- name: Zeitdienst aktivieren (systemd-timesyncd)
+  include_tasks: time.yml
+
+- name: Install Apache2 Webserver
+  include_tasks: apache.yml
+
+- name: BME280 Sensor einrichten
+  include_tasks: bme280.yml
+
+- name: Web-Ausgabe des Sensors aktualisieren
+  include_tasks: update_sensor_data.yml
+
+- name: WireGuard VPN installieren und konfigurieren
+  include_tasks: wireguard.yml

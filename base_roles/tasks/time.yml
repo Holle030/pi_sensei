@@ -1,0 +1,16 @@
+---
+- name: Ensure systemd-timesyncd is installed
+  apt:
+    name: systemd-timesyncd
+    state: present
+    update_cache: yes
+
+- name: Enable and start systemd-timesyncd
+  systemd:
+    name: systemd-timesyncd
+    enabled: yes
+    state: started
+
+- name: Set timezone to Europe/Berlin
+  timezone:
+    name: Europe/Berlin

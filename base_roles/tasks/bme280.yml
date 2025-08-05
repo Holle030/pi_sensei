@@ -1,0 +1,81 @@
+---
+# BME280 Sensor Setup mit Virtual Environment
+- name: I2C aktivieren
+  lineinfile:
+    path: /boot/config.txt
+    regexp: '^#?dtparam=i2c_arm='
+    line: 'dtparam=i2c_arm=on'
+  notify: reboot
+
+- name: I2C Tools installieren
+  apt:
+    name:
+      - i2c-tools
+      - python3-venv
+      - python3-full
+      - python3-dev
+    state: present
+    update_cache: yes
+
+- name: I2C Gruppe für User
+  user:
+    name: hollepi
+    groups: i2c
+    append: yes
+
+- name: Virtual Environment für Sensor erstellen
+  pip:
+    name:
+      - adafruit-circuitpython-bme280
+      - adafruit-blinka
+      - RPI.GPIO
+    virtualenv: /home/hollepi/sensor_env
+    virtualenv_python: python3
+    virtualenv_site_packages: no
+
+- name: Sensor-Script erstellen
+  copy:
+    content: |
+      #!/home/hollepi/sensor_env/bin/python3
+      import time
+      import json
+      from datetime import datetime
+      import board
+      import adafruit_bme280
+
+      # BME280 initialisieren
+      i2c = board.I2C()
+      bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c)
+
+      # Sensordaten lesen
+      data = {
+          "timestamp": datetime.now().isoformat(),
+          "temperature": round(bme280.temperature, 2),
+          "humidity": round(bme280.relative_humidity, 2),
+          "pressure": round(bme280.pressure, 2)
+      }
+
+      # JSON-Datei für Apache schreiben
+      with open('/var/www/html/sensor_data.json', 'w') as f:
+          json.dump(data, f, indent=2)
+
+      print(f"Temp: {data['temperature']}°C, Humidity: {data['humidity']}%, Pressure: {data['pressure']}hPa")
+    dest: /home/hollepi/read_sensor.py
+    owner: hollepi
+    group: hollepi
+    mode: '0755'
+
+- name: Cronjob für regelmäßige Sensordaten
+  cron:
+    name: "BME280 Sensor auslesen"
+    minute: "*/5"
+    job: "/home/hollepi/read_sensor.py"
+    user: hollepi
+
+- name: Sensor-Daten Web-Verzeichnis berechtigen
+  file:
+    path: /var/www/html
+    owner: www-data
+    group: hollepi
+    mode: '0775'
+    recurse: yes

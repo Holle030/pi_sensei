@@ -1,0 +1,29 @@
+---
+- name: Ensure .ssh directory exists
+  file:
+    path: /home/hollepi/.ssh
+    state: directory
+    owner: hollepi
+    group: hollepi
+    mode: '0700'
+
+- name: Deploy SSH public key for user
+  authorized_key:
+    user: hollepi
+    state: present
+    key: "{{ lookup('file', playbook_dir + '/secrets/keys/id_ed25519.pub') }}"
+    comment: "Deployed by Ansible"
+
+- name: Disable password authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+  notify: restart ssh
+
+- name: Enable public key authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PubkeyAuthentication'
+    line: 'PubkeyAuthentication yes'
+  notify: restart ssh

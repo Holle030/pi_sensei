@@ -1,0 +1,31 @@
+# Installiert hilfreiche Tools für Administration und Fehleranalyse
+
+- name: Install system tools
+  apt:
+    name:
+      - htop
+      - curl
+      - git
+      - fail2ban
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Enable and configure fail2ban ssh jail
+  blockinfile:
+    path: /etc/fail2ban/jail.local
+    block: |
+      [sshd]
+      enabled = true
+      port    = ssh
+      filter  = sshd
+      logpath = /var/log/auth.log
+      maxretry = 5
+    create: yes
+  become: true
+
+- name: Restart fail2ban to apply changes
+  systemd:
+    name: fail2ban
+    state: restarted
+  become: true

@@ -1,0 +1,6 @@
+---
+- name: Configure Raspberry Pi
+  hosts: pis
+  become: yes
+  roles:
+    - base_roles

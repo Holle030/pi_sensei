@@ -1,0 +1,22 @@
+- name: Apache2 installieren
+  apt:
+    name: apache2
+    state: present
+    update_cache: yes
+  become: true  # Falls sudo notwendig ist
+
+- name: Check if apache2 is installed
+  command: dpkg -l apache2
+  register: apache_status
+  ignore_errors: yes
+
+- name: Print Apache status
+  debug:
+    var: apache_status
+
+- name: Apache2-Dienst aktivieren und starten
+  systemd:  # 'systemd' statt 'service' wird empfohlen
+    name: apache2
+    state: started
+    enabled: true
+  become: true

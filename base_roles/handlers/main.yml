@@ -1,0 +1,38 @@
+# base_roles/handlers/main.yml
+
+---
+- name: restart ssh
+  systemd:
+    name: ssh
+    state: restarted
+  become: yes
+
+- name: restart sshd
+  systemd:
+    name: sshd
+    state: restarted
+  become: yes
+
+- name: restart wireguard
+  systemd:
+    name: wg-quick@wg0
+    state: restarted
+  become: yes
+
+- name: restart apache2
+  systemd:
+    name: apache2
+    state: restarted
+  become: yes
+
+- name: reload apache2
+  systemd:
+    name: apache2
+    state: reloaded
+  become: yes
+
+- name: restart networking
+  systemd:
+    name: networking
+    state: restarted
+  become: yes

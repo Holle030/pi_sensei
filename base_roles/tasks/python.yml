@@ -1,0 +1,14 @@
+- name: Install python3-virtualenv
+  apt:
+    name: python3-virtualenv
+    state: present
+  become: true
+
+- name: Create virtual environment for sensor
+  pip:
+    name:
+      - adafruit-circuitpython-bme280
+      - adafruit-blinka
+      - RPI.GPIO
+    virtualenv: /home/hollepi/sensor_env
+    virtualenv_python: python3

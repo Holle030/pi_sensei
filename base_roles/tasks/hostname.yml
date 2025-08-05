@@ -1,0 +1,4 @@
+---
+- name: Set hostname to hollepi
+  hostname:
+    name: hollepi

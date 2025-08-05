@@ -1,0 +1,37 @@
+---
+- name: Install UFW firewall
+  apt:
+    name: ufw
+    state: present
+    update_cache: yes
+
+- name: Allow SSH (Port 22)
+  ufw:
+    rule: allow
+    port: 22
+    proto: tcp
+
+- name: Allow WireGuard (Port 51820/udp)
+  ufw:
+    rule: allow
+    port: 51820
+    proto: udp
+
+- name: Enable UFW and set default policy
+  ufw:
+    state: enabled
+    policy: deny
+
+- name: Erlaube DNS (UDP) nach außen
+  ufw:
+    rule: allow
+    port: 53
+    proto: udp
+    direction: out
+
+- name: Erlaube DNS (TCP) nach außen
+  ufw:
+    rule: allow
+    port: 53
+    proto: tcp
+    direction: out
